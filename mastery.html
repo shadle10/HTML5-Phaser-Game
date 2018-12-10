@@ -60,10 +60,11 @@ function preload ()
     this.load.image('mastery3', 'assets/mastery-3.png');
     this.load.image('autonomy1', 'assets/autonomy.png');
     this.load.image('purpose1', 'assets/purpose.png');
-    this.load.image('bombMastery1', 'assets/bomb-mastery-1.png');
-    this.load.image('bombMastery2', 'assets/bomb-mastery-2.png');
-    this.load.image('bombMastery3', 'assets/bomb-mastery-3.png');
+    this.load.image('bombMastery1', 'assets/bomb-mastery-1v2.png');
+    this.load.image('bombMastery2', 'assets/bomb-mastery-2v2.png');
+    this.load.image('bombMastery3', 'assets/bomb-mastery-3v2.png');
     this.load.image('bomb', 'assets/bomb.png');
+    this.load.image('bomb2', 'assets/bomb-2.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 
@@ -116,9 +117,9 @@ function create ()
     cursors = this.input.keyboard.createCursorKeys();
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
-    mastery_stars = this.physics.add.group({
+   mastery_stars = this.physics.add.group({
         key: 'mastery1',
-        setXY: { x: 30, y: 0, stepX: 70 }
+        setXY: { x: 210, y: 0, stepX: 70 }
     });
 
     mastery_stars.children.iterate(function (child) {
@@ -127,13 +128,34 @@ function create ()
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
+    mastery_bombs = this.physics.add.group({
+        key: 'bombMastery1',
+        setXY: { x: 30, y: 0, stepX: 70 }
+    });
 
+    mastery_bombs.children.iterate(function (child) {
+
+        //  Give each star a slightly different bounce
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+    });
     mastery_stars1 = this.physics.add.group({
         key: 'mastery2',
         setXY: { x: 310, y: 0, stepX: 70 }
     });
 
     mastery_stars1.children.iterate(function (child) {
+
+        //  Give each star a slightly different bounce
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+    });
+    mastery_bombs_2 = this.physics.add.group({
+        key: 'bombMastery2',
+        setXY: { x: 470, y: 0, stepX: 70 }
+    });
+
+    mastery_bombs_2.children.iterate(function (child) {
 
         //  Give each star a slightly different bounce
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
@@ -150,7 +172,17 @@ function create ()
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
+    mastery_bombs_3 = this.physics.add.group({
+        key: 'bombMastery3',
+        setXY: { x: 690, y: 0, stepX: 70 }
+    });
 
+    mastery_bombs_3.children.iterate(function (child) {
+
+        //  Give each star a slightly different bounce
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+    });
     /*stars = this.physics.add.group({
         key: 'star',
         repeat: 11,
@@ -167,11 +199,13 @@ function create ()
     bombs = this.physics.add.group();
     var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
-        var bomb = bombs.create(x, 16, 'bombMastery1');
+        var bomb = bombs.create(x, 16, 'bomb2');
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
         bomb.allowGravity = false;
+
+
 
 
     //  The score
@@ -182,14 +216,21 @@ function create ()
     this.physics.add.collider(mastery_stars, platforms);
     this.physics.add.collider(mastery_stars1, platforms);
     this.physics.add.collider(mastery_stars2, platforms);
-    this.physics.add.collider(bombs, platforms);
+    this.physics.add.collider(mastery_bombs, platforms);
+    this.physics.add.collider(mastery_bombs_2, platforms);
+    this.physics.add.collider(mastery_bombs_3, platforms);
+    this.physics.add.collider(bomb, platforms);
+
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, mastery_stars, collectStar, null, this);
     this.physics.add.overlap(player, mastery_stars1, collectStar, null, this);
     this.physics.add.overlap(player, mastery_stars2, collectStar, null, this);
 
-    this.physics.add.collider(player, bombs, hitBomb, null, this);
+    this.physics.add.collider(player, mastery_bombs, hitBomb, null, this);
+    this.physics.add.collider(player, mastery_bombs_2, hitBomb, null, this);
+    this.physics.add.collider(player, mastery_bombs_3, hitBomb, null, this);
+    this.physics.add.collider(player, bomb, hitBomb, null, this);
 
 
     
@@ -239,7 +280,7 @@ function collectStar (player, star)
     {
         
         //scoreText.setText('Mastery Reached!');
-        scoreText = this.add.text(290, 290, 'MASTERY REACHED!', { fontSize: '50px', fill: '#ffff00' });
+        var finalText = this.add.text(100, 200, 'MASTERY REACHED!', { fontSize: '60px', fill: '#ffff00', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center'});
         console.log('all collected');
         this.physics.pause();
 
@@ -278,23 +319,31 @@ function collectStar (player, star)
 
     } else if((mastery_stars.countActive(true) + mastery_stars1.countActive(true) + mastery_stars2.countActive(true)) === 2){ 
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-        var bomb = bombs.create(x, 16, 'bombMastery2');
+        var bomb = bombs.create(x, 16, 'bomb2');
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
         bomb.allowGravity = false;
+
+        this.physics.add.collider(bomb, platforms);
+        this.physics.add.collider(player, bomb, hitBomb, null, this);
+        /*
     } else {
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
         var bomb = bombs.create(x, 16, 'bombMastery3');
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        bomb.allowGravity = false;
+        bomb.allowGravity = false;*/
     }
 }
 
 function hitBomb (player, bomb)
 {
+    
+    var finalText = this.add.text(220, 275, 'NICE EFFORT!', { fontSize: '50px', fill: '#ffffff', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center' });
+    var finalText2 = this.add.text(100, 200, 'MASTERY WITHIN REACH', { fontSize: '50px', fill: '#ffffff', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center' });
+
     this.physics.pause();
 
     player.setTint(0xff0000);

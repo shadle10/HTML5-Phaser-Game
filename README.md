@@ -1,1 +1,3 @@
 Developed this game using the excellent tutorial on https://phaser.io/tutorials/making-your-first-phaser-3-game
+
+This game is centered around showcasing how to develop the 3 principles of intrinsic motivation outlined by Daniel Pink in the book Drive.  These principles include mastery, autononmy, and purpose.  In the games, you collect coins representing strategies that help you reach mastery, autonomy, and purpose and you can also run into bombs that prevent you from embodying these ideals. 
