@@ -6,11 +6,50 @@
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <style type="text/css">
         body {
-            margin: 0;
+            margin: 50px;
+            text-align: center;
+            overflow:visible!important;
+        }
+        h3 {
+            margin-top: -20px;
+            padding-bottom: 40px;
+        }
+        font-family: 'Megalopolis';
+          src: url('../assets/MegalopolisExtra-Regular.eot'); /* IE9 Compat Modes */
+          src: url('../assets/MegalopolisExtra-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+               url('../assets/MegalopolisExtra-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+               url('../assets/MegalopolisExtra-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+        }
+        h1, h2, h3, h4, h5 {
+          font-family: 'Megalopolis', sans-serif;
+        }
+        a.button1{
+         display:inline-block;
+         padding:0.35em 1.2em;
+         border:0.1em solid rgb(247, 78, 59);
+         margin:0 0.3em 0.3em 0;
+         border-radius:0.12em;
+         box-sizing: border-box;
+         text-decoration:none;
+         font-family:'Roboto',sans-serif;
+         font-weight:300;
+         color:rgb(247, 78, 59);
+         text-align:center;
+         transition: all 0.2s;
+        }
+        a.button1:hover{
+         color:#fff;
+         background-color:rgba(247, 78, 59,.5);
+        }
+        @media all and (max-width:30em){
+         a.button1{
+          display:block;
+          margin:0.4em auto;
+         }
         }
     </style>
 </head>
-<body>
+<body style="overflow:visible;">
 
 <script type="text/javascript">
 
@@ -34,9 +73,9 @@ var config = {
 
 var player;
 var stars;
-var mastery_stars;
-var mastery_stars1;
-var mastery_stars2;
+var autonomy_stars;
+var autonomy_stars1;
+var autonomy_stars2;
 var bombs;
 var platforms;
 var cursors;
@@ -48,24 +87,23 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('sky', 'assets/sky.png');
-    this.load.image('ground', 'assets/platform.png');
-    this.load.image('star', 'assets/star.png');
+    this.load.image('sky', '../assets/sky.png');
+    this.load.image('ground', '../assets/platform.png');
+    this.load.image('star', '../assets/star.png');
 
     // mastery 
         // STARS: learning goal
         // Bombs: performance goal
-    this.load.image('mastery1', 'assets/mastery-1.png');
-    this.load.image('mastery2', 'assets/mastery-2.png');
-    this.load.image('mastery3', 'assets/mastery-3.png');
-    this.load.image('autonomy1', 'assets/autonomy.png');
-    this.load.image('purpose1', 'assets/purpose.png');
-    this.load.image('bombMastery1', 'assets/bomb-mastery-1v2.png');
-    this.load.image('bombMastery2', 'assets/bomb-mastery-2v2.png');
-    this.load.image('bombMastery3', 'assets/bomb-mastery-3v2.png');
-    this.load.image('bomb', 'assets/bomb.png');
-    this.load.image('bomb2', 'assets/bomb-2.png');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('mastery1', '../assets/autonomy-1.png');
+    this.load.image('mastery2', '../assets/autonomy-1.png');
+    this.load.image('mastery3', '../assets/autonomy-1.png');
+    this.load.image('purpose1', '../assets/purpose.png');
+    this.load.image('bombMastery1', '../assets/bomb-mastery-1.png');
+    this.load.image('bombMastery2', '../assets/bomb-mastery-2.png');
+    this.load.image('bombMastery3', '../assets/bomb-mastery-3.png');
+    this.load.image('bomb', '../assets/bomb.png');
+     this.load.image('bomb2', '../assets/bomb-2.png');
+    this.load.spritesheet('dude', '../assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 
 function create ()
@@ -117,9 +155,9 @@ function create ()
     cursors = this.input.keyboard.createCursorKeys();
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
-   mastery_stars = this.physics.add.group({
+    mastery_stars = this.physics.add.group({
         key: 'mastery1',
-        setXY: { x: 210, y: 0, stepX: 70 }
+        setXY: { x: 30, y: 0, stepX: 70 }
     });
 
     mastery_stars.children.iterate(function (child) {
@@ -128,34 +166,13 @@ function create ()
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
-    mastery_bombs = this.physics.add.group({
-        key: 'bombMastery1',
-        setXY: { x: 40, y: 0, stepX: 70 }
-    });
 
-    mastery_bombs.children.iterate(function (child) {
-
-        //  Give each star a slightly different bounce
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
     mastery_stars1 = this.physics.add.group({
         key: 'mastery2',
         setXY: { x: 310, y: 0, stepX: 70 }
     });
 
     mastery_stars1.children.iterate(function (child) {
-
-        //  Give each star a slightly different bounce
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
-    mastery_bombs_2 = this.physics.add.group({
-        key: 'bombMastery2',
-        setXY: { x: 470, y: 0, stepX: 70 }
-    });
-
-    mastery_bombs_2.children.iterate(function (child) {
 
         //  Give each star a slightly different bounce
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
@@ -172,17 +189,7 @@ function create ()
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
-    mastery_bombs_3 = this.physics.add.group({
-        key: 'bombMastery3',
-        setXY: { x: 690, y: 0, stepX: 70 }
-    });
 
-    mastery_bombs_3.children.iterate(function (child) {
-
-        //  Give each star a slightly different bounce
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
     /*stars = this.physics.add.group({
         key: 'star',
         repeat: 11,
@@ -206,31 +213,22 @@ function create ()
         bomb.allowGravity = false;
 
 
-
-
     //  The score
-    scoreText = this.add.text(16, 16, 'Mastery Score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(16, 16, 'Autonomy Score: 0', { fontSize: '32px', fill: '#000' });
 
     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(mastery_stars, platforms);
     this.physics.add.collider(mastery_stars1, platforms);
     this.physics.add.collider(mastery_stars2, platforms);
-    this.physics.add.collider(mastery_bombs, platforms);
-    this.physics.add.collider(mastery_bombs_2, platforms);
-    this.physics.add.collider(mastery_bombs_3, platforms);
-    this.physics.add.collider(bomb, platforms);
-
+    this.physics.add.collider(bombs, platforms);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, mastery_stars, collectStar, null, this);
     this.physics.add.overlap(player, mastery_stars1, collectStar, null, this);
     this.physics.add.overlap(player, mastery_stars2, collectStar, null, this);
 
-    this.physics.add.collider(player, mastery_bombs, hitBomb, null, this);
-    this.physics.add.collider(player, mastery_bombs_2, hitBomb, null, this);
-    this.physics.add.collider(player, mastery_bombs_3, hitBomb, null, this);
-    this.physics.add.collider(player, bomb, hitBomb, null, this);
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
 
 
     
@@ -274,13 +272,13 @@ function collectStar (player, star)
 
     //  Add and update the score
     score += 10;
-    scoreText.setText('Mastery Score: ' + score);
+    scoreText.setText('Autonomy Score: ' + score);
 
     if ((mastery_stars.countActive(true) + mastery_stars1.countActive(true) + mastery_stars2.countActive(true)) === 0)
     {
         
         //scoreText.setText('Mastery Reached!');
-        var finalText = this.add.text(100, 200, 'MASTERY REACHED!', { fontSize: '60px', fill: '#ffff00', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center'});
+        var finalText = this.add.text(100, 200, 'AUTONOMY REACHED!', { fontSize: '60px', fill: '#ffff00', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center'});
         console.log('all collected');
         this.physics.pause();
 
@@ -341,8 +339,8 @@ function collectStar (player, star)
 function hitBomb (player, bomb)
 {
     
-    var finalText = this.add.text(220, 275, 'NICE EFFORT!', { fontSize: '50px', fill: '#ffffff', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center' });
-    var finalText2 = this.add.text(100, 200, 'MASTERY WITHIN REACH', { fontSize: '50px', fill: '#ffffff', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center' });
+var finalText = this.add.text(220, 275, 'NICE EFFORT!', { fontSize: '50px', fill: '#ffffff', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center' });
+    var finalText2 = this.add.text(100, 200, 'AUTONOMY WITHIN REACH', { fontSize: '50px', fill: '#ffffff', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center' });
 
     this.physics.pause();
 
@@ -354,6 +352,8 @@ function hitBomb (player, bomb)
 }
 
 </script>
-
+<br>
+<h1><img src="../assets/aut-game.png"></h1>
+<h3>In this game, collect the sign posts named after concepts that have been shown to help organizations encourage autonomy. The bombs signify the challenges that may distract you from your goal of moving towards autonomy. If you choose the wrong sign post or get hit by a bomb, you will suffer a set back and will have to restart the game. But, the effort that you put into the game is directly tied to your ability to win the autonomy game.<br><a href="/walsh-drive-game/autonomy" class="button1">Play Again</a></h3>
 </body>
 </html>

@@ -6,11 +6,50 @@
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <style type="text/css">
         body {
-            margin: 0;
+            margin: 50px;
+            text-align: center;
+            overflow:visible!important;
+        }
+        h3 {
+            margin-top: -20px;
+            padding-bottom: 40px;
+        }
+        font-family: 'Megalopolis';
+          src: url('../assets/MegalopolisExtra-Regular.eot'); /* IE9 Compat Modes */
+          src: url('../assets/MegalopolisExtra-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+               url('../assets/MegalopolisExtra-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+               url('../assets/MegalopolisExtra-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+        }
+        h1, h2, h3, h4, h5 {
+          font-family: 'Megalopolis', sans-serif;
+        }
+        a.button1{
+         display:inline-block;
+         padding:0.35em 1.2em;
+         border:0.1em solid rgb(247, 78, 59);
+         margin:0 0.3em 0.3em 0;
+         border-radius:0.12em;
+         box-sizing: border-box;
+         text-decoration:none;
+         font-family:'Roboto',sans-serif;
+         font-weight:300;
+         color:rgb(247, 78, 59);
+         text-align:center;
+         transition: all 0.2s;
+        }
+        a.button1:hover{
+         color:#fff;
+         background-color:rgba(247, 78, 59,.5);
+        }
+        @media all and (max-width:30em){
+         a.button1{
+          display:block;
+          margin:0.4em auto;
+         }
         }
     </style>
 </head>
-<body>
+<body style="overflow:visible;">
 
 <script type="text/javascript">
 
@@ -34,9 +73,9 @@ var config = {
 
 var player;
 var stars;
-var autonomy_stars;
-var autonomy_stars1;
-var autonomy_stars2;
+var mastery_stars;
+var mastery_stars1;
+var mastery_stars2;
 var bombs;
 var platforms;
 var cursors;
@@ -48,22 +87,24 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('sky', 'assets/sky.png');
-    this.load.image('ground', 'assets/platform.png');
-    this.load.image('star', 'assets/star.png');
+    this.load.image('sky', '../assets/sky.png');
+    this.load.image('ground', '../assets/platform.png');
+    this.load.image('star', '../assets/star.png');
 
     // mastery 
         // STARS: learning goal
         // Bombs: performance goal
-    this.load.image('mastery1', 'assets/autonomy-1.png');
-    this.load.image('mastery2', 'assets/autonomy-1.png');
-    this.load.image('mastery3', 'assets/autonomy-1.png');
-    this.load.image('purpose1', 'assets/purpose.png');
-    this.load.image('bombMastery1', 'assets/bomb-mastery-1.png');
-    this.load.image('bombMastery2', 'assets/bomb-mastery-2.png');
-    this.load.image('bombMastery3', 'assets/bomb-mastery-3.png');
-    this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('mastery1', '../assets/icons8-compass-64.png');
+    this.load.image('mastery2', '../assets/icons8-compass-64.png');
+    this.load.image('mastery3', '../assets/icons8-compass-64.png');
+    this.load.image('autonomy1', '../assets/autonomy.png');
+    this.load.image('purpose1', '../assets/purpose.png');
+    this.load.image('bombMastery1', '../assets/bomb-mastery-1.png');
+    this.load.image('bombMastery2', '../assets/bomb-mastery-2.png');
+    this.load.image('bombMastery3', '../assets/bomb-mastery-3.png');
+    this.load.image('bomb', '../assets/bomb.png');
+     this.load.image('bomb2', '../assets/bomb-2.png');
+    this.load.spritesheet('dude', '../assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 
 function create ()
@@ -166,7 +207,7 @@ function create ()
     bombs = this.physics.add.group();
     var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
-        var bomb = bombs.create(x, 16, 'bombMastery1');
+        var bomb = bombs.create(x, 16, 'bomb2');
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
@@ -174,7 +215,7 @@ function create ()
 
 
     //  The score
-    scoreText = this.add.text(16, 16, 'Autonomy Score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(16, 16, 'Purpose Score: 0', { fontSize: '32px', fill: '#000' });
 
     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
@@ -232,13 +273,13 @@ function collectStar (player, star)
 
     //  Add and update the score
     score += 10;
-    scoreText.setText('Autonomy Score: ' + score);
+    scoreText.setText('Mastery Score: ' + score);
 
     if ((mastery_stars.countActive(true) + mastery_stars1.countActive(true) + mastery_stars2.countActive(true)) === 0)
     {
         
         //scoreText.setText('Mastery Reached!');
-        scoreText = this.add.text(290, 290, 'AUTONOMY REACHED!', { fontSize: '50px', fill: '#ffff00' });
+        var finalText = this.add.text(100, 200, 'PURPOSE REACHED!', { fontSize: '60px', fill: '#ffff00', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center'});
         console.log('all collected');
         this.physics.pause();
 
@@ -277,23 +318,30 @@ function collectStar (player, star)
 
     } else if((mastery_stars.countActive(true) + mastery_stars1.countActive(true) + mastery_stars2.countActive(true)) === 2){ 
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-        var bomb = bombs.create(x, 16, 'bombMastery2');
+        var bomb = bombs.create(x, 16, 'bomb2');
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
         bomb.allowGravity = false;
+
+        this.physics.add.collider(bomb, platforms);
+        this.physics.add.collider(player, bomb, hitBomb, null, this);
+        /*
     } else {
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
         var bomb = bombs.create(x, 16, 'bombMastery3');
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        bomb.allowGravity = false;
+        bomb.allowGravity = false;*/
     }
 }
 
 function hitBomb (player, bomb)
 {
+    var finalText = this.add.text(220, 275, 'NICE EFFORT!', { fontSize: '50px', fill: '#ffffff', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center' });
+    var finalText2 = this.add.text(100, 200, 'PURPOSE WITHIN REACH', { fontSize: '50px', fill: '#ffffff', stroke: '#000', strokeThickness: '6', fontWeight: 'bold', align:'center' });
+
     this.physics.pause();
 
     player.setTint(0xff0000);
@@ -304,6 +352,8 @@ function hitBomb (player, bomb)
 }
 
 </script>
-
+<h1><img src="../assets/purp-game.png"></h1>
+<h3>In this game, collect the compasses named after concepts that have been shown to help organizations encourage purpose. The bombs signify the challenges that may distract you from your goal of moving towards purpose. If you choose the wrong compass or get hit by a bomb, you will suffer a set back and will have to restart the game. But, the effort that you put into the game is directly tied to your ability to win the purpose game.<br><a href="/walsh-drive-game/purpose" class="button1">Play Again</a></h1>
+    
 </body>
 </html>
