@@ -168,7 +168,7 @@ function create ()
     });
     mastery_bombs = this.physics.add.group({
         key: 'bombMastery1',
-        setXY: { x: 210, y: 0, stepX: 70 }
+        setXY: { x: 180, y: 0, stepX: 70 }
     });
 
     mastery_bombs.children.iterate(function (child) {
@@ -189,15 +189,16 @@ function create ()
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
-    mastery_stars1.children.iterate(function (child) {
+    
+    mastery_bombs_2 = this.physics.add.group({
+        key: 'bombMastery2',
+        setXY: { x: 310, y: 0, stepX: 70 }
+    });
+    mastery_bombs_2.children.iterate(function (child) {
 
         //  Give each star a slightly different bounce
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
-    });
-    mastery_bombs_2 = this.physics.add.group({
-        key: 'bombMastery2',
-        setXY: { x: 310, y: 0, stepX: 70 }
     });
     mastery_stars2 = this.physics.add.group({
         key: 'mastery3',
