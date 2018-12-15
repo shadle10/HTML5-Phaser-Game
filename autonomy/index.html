@@ -95,12 +95,12 @@ function preload ()
         // STARS: learning goal
         // Bombs: performance goal
     this.load.image('mastery1', '../assets/autonomy-1.png');
-    this.load.image('mastery2', '../assets/autonomy-1.png');
-    this.load.image('mastery3', '../assets/autonomy-1.png');
+    this.load.image('mastery2', '../assets/autonomy-2.png');
+    this.load.image('mastery3', '../assets/autonomy-3.png');
     this.load.image('purpose1', '../assets/purpose.png');
-    this.load.image('bombMastery1', '../assets/bomb-mastery-1.png');
-    this.load.image('bombMastery2', '../assets/bomb-mastery-2.png');
-    this.load.image('bombMastery3', '../assets/bomb-mastery-3.png');
+    this.load.image('bombMastery1', '../assets/bomb-autonomy-1.png');
+    this.load.image('bombMastery2', '../assets/bomb-autonomy-2.png');
+    this.load.image('bombMastery3', '../assets/bomb-autonomy-3.png');
     this.load.image('bomb', '../assets/bomb.png');
      this.load.image('bomb2', '../assets/bomb-2.png');
     this.load.spritesheet('dude', '../assets/dude.png', { frameWidth: 32, frameHeight: 48 });
@@ -166,10 +166,21 @@ function create ()
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
+    mastery_bombs = this.physics.add.group({
+        key: 'bombMastery1',
+        setXY: { x: 210, y: 0, stepX: 70 }
+    });
+
+    mastery_bombs.children.iterate(function (child) {
+
+        //  Give each star a slightly different bounce
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+    });
 
     mastery_stars1 = this.physics.add.group({
         key: 'mastery2',
-        setXY: { x: 310, y: 0, stepX: 70 }
+        setXY: { x: 470, y: 0, stepX: 70 }
     });
 
     mastery_stars1.children.iterate(function (child) {
@@ -178,12 +189,33 @@ function create ()
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
+    mastery_stars1.children.iterate(function (child) {
+
+        //  Give each star a slightly different bounce
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+    });
+    mastery_bombs_2 = this.physics.add.group({
+        key: 'bombMastery2',
+        setXY: { x: 310, y: 0, stepX: 70 }
+    });
     mastery_stars2 = this.physics.add.group({
         key: 'mastery3',
-        setXY: { x: 590, y: 0, stepX: 70 }
+        setXY: { x: 690, y: 0, stepX: 70 }
     });
 
     mastery_stars2.children.iterate(function (child) {
+
+        //  Give each star a slightly different bounce
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+    });
+    mastery_bombs_3 = this.physics.add.group({
+        key: 'bombMastery3',
+        setXY: { x: 600, y: 0, stepX: 70 }
+    });
+
+    mastery_bombs_3.children.iterate(function (child) {
 
         //  Give each star a slightly different bounce
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
@@ -229,6 +261,9 @@ function create ()
     this.physics.add.overlap(player, mastery_stars2, collectStar, null, this);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
+    this.physics.add.collider(player, mastery_bombs, hitBomb, null, this);
+    this.physics.add.collider(player, mastery_bombs_2, hitBomb, null, this);
+    this.physics.add.collider(player, mastery_bombs_3, hitBomb, null, this);
 
 
     
