@@ -380,7 +380,7 @@ function collectStar (player, star)
     }
 }
 function resize() {
-        var canvas = game.canvas, width = window.innerWidth, height = window.innerHeight;
+        var canvas = game.canvas, width = document.body.clientWidth, height = window.innerHeight;
     var wratio = width / height, ratio = canvas.width / canvas.height;
 
     if (wratio < ratio) {

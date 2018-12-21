@@ -111,7 +111,7 @@ function create ()
 {
     window.addEventListener('resize', resize);
     resize();
-    
+
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
 
@@ -274,7 +274,7 @@ function create ()
     
 }
 function resize() {
-        var canvas = game.canvas, width = window.innerWidth, height = window.innerHeight;
+        var canvas = game.canvas, width = document.body.clientWidth, height = window.innerHeight;
     var wratio = width / height, ratio = canvas.width / canvas.height;
 
     if (wratio < ratio) {
